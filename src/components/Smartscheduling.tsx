@@ -37,7 +37,7 @@ export default function AISmartScheduler() {
     setSchedule("");
 
     try {
-      const res = await fetch("http://localhost:5000/api/ai/schedule", {
+      const res = await fetch("https://study-planner-2-zmn4.onrender.com/api/ai/schedule", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

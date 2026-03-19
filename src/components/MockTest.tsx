@@ -50,7 +50,7 @@ useEffect(() => {
     subject.toLowerCase().includes("javascript");
 
   const startTest = async () => {
-    const res = await fetch("http://localhost:5000/api/mock/start", {
+    const res = await fetch("https://study-planner-2-zmn4.onrender.com/api/mock/start", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ subject, weakTopic, lastScore }),
@@ -67,7 +67,7 @@ useEffect(() => {
     const token = localStorage.getItem("token");
   
     try {
-      const res = await fetch("http://localhost:5000/api/mock/next", {
+      const res = await fetch("https://study-planner-2-zmn4.onrender.com/api/mock/next", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -108,7 +108,7 @@ useEffect(() => {
   
     setScore(correct);
   
-    const res = await fetch("http://localhost:5000/api/mock/submit", {
+    const res = await fetch("https://study-planner-2-zmn4.onrender.com/api/mock/submit", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

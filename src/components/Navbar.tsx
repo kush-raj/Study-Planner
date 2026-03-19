@@ -23,7 +23,7 @@ type User = {
   username: string;
 };
 
-const API_URL = "http://localhost:5000";
+const API_URL = "https://study-planner-2-zmn4.onrender.com";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
