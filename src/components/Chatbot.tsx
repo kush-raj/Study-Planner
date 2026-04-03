@@ -30,7 +30,7 @@ const Chatbot = () => {
       const token = localStorage.getItem("token");
 
       const res = await axios.post(
-        "https://study-planner-2-zmn4.onrender.com/api/chat",
+        "https://study-planner-4-geb9.onrender.com/api/chat",
         {
           message: userMessage,
           topic: "mern",

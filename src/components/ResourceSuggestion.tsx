@@ -31,13 +31,13 @@ export default function YouTubeAIResources() {
   useEffect(() => {
     if (!token) return;
 
-    fetch("https://study-planner-2-zmn4.onrender.com/api/favorites", {
+    fetch("https://study-planner-4-geb9.onrender.com/api/favorites", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
       .then(setFavorites);
 
-    fetch("https://study-planner-2-zmn4.onrender.com/api/playlists/my", {
+    fetch("https://study-planner-4-geb9.onrender.com/api/playlists/my", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -51,7 +51,7 @@ export default function YouTubeAIResources() {
     setLoading(true);
     setVideos([]);
 
-    const res = await fetch("https://study-planner-2-zmn4.onrender.com/api/youtube/suggestions", {
+    const res = await fetch("https://study-planner-4-geb9.onrender.com/api/youtube/suggestions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query }),
@@ -66,7 +66,7 @@ export default function YouTubeAIResources() {
   const toggleFavorite = async (video: Video) => {
     if (!token) return alert("Login first");
 
-    await fetch("https://study-planner-2-zmn4.onrender.com/api/favorites/toggle", {
+    await fetch("https://study-planner-4-geb9.onrender.com/api/favorites/toggle", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -89,7 +89,7 @@ export default function YouTubeAIResources() {
     if (favorites.length === 0)
       return alert("Add videos to favorites first");
 
-    const res = await fetch("https://study-planner-2-zmn4.onrender.com/api/playlists/create", {
+    const res = await fetch("https://study-planner-4-geb9.onrender.com/api/playlists/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -104,14 +104,14 @@ export default function YouTubeAIResources() {
     const data = await res.json();
 
     alert(
-      `Playlist Saved ✅\nShare Link:\nhttps://study-planner-2-zmn4.onrender.com/playlist/${data._id}`
+      `Playlist Saved ✅\nShare Link:\nhttps://study-planner-4-geb9.onrender.com/playlist/${data._id}`
     );
 
     setPlaylistName("");
     setShowCreateModal(false);
 
     // reload playlists
-    fetch("https://study-planner-2-zmn4.onrender.com/api/playlists/my", {
+    fetch("https://study-planner-4-geb9.onrender.com/api/playlists/my", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -123,7 +123,7 @@ export default function YouTubeAIResources() {
     if (!token || !selectedVideo) return;
 
     await fetch(
-      `https://study-planner-2-zmn4.onrender.com/api/playlists/${playlistId}/add-video`,
+      `https://study-planner-4-geb9.onrender.com/api/playlists/${playlistId}/add-video`,
       {
         method: "POST",
         headers: {

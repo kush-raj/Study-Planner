@@ -37,7 +37,7 @@ export default function AISmartScheduler() {
     setSchedule("");
 
     try {
-      const res = await fetch("https://study-planner-2-zmn4.onrender.com/api/ai/schedule", {
+      const res = await fetch("https://study-planner-4-geb9.onrender.com/api/ai/schedule", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -50,6 +50,9 @@ export default function AISmartScheduler() {
       if (!res.ok) throw new Error(data.error || "Failed to generate schedule");
 
       setSchedule(data.schedule);
+      window.dispatchEvent(
+        new CustomEvent("scheduleUpdated", { detail: data.schedule })     //  new change
+      );                                                                  // new chnage
     } catch (err: any) {
       alert(err.message || "AI failed to generate schedule");
     } finally {

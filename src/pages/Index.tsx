@@ -4,7 +4,7 @@ import Problem from "@/components/Problem";
 import HowItWorks from "@/components/HowItWorks";
 import Features from "@/components/Features";
 import Smartscheduling from "@/components/Smartscheduling";
-import ProgressTracker from "@/components/ProgressTracker"
+import ProgressTracker from "@/components/ProgressTracker";
 import PomodoroTimer from "@/components/PomodoroTimer";
 import MockTest from "@/components/MockTest";
 import ResourceSuggestion from "@/components/ResourceSuggestion";

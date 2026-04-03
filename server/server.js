@@ -1,28 +1,17 @@
+// ---------------- DEPENDENCIES ----------------
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const axios = require("axios");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const router = express.Router();
 require("dotenv").config();
 
 const app = express();
-app.use(
-  cors({
-    origin: "*",
-    methods: ["GET", "POST", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+app.use(cors({ origin: "*", methods: ["GET", "POST", "DELETE"], allowedHeaders: ["Content-Type", "Authorization"] }));
 app.use(express.json());
-
-// ---------------- DB -----------------
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.error("❌ Mongo Error:", err));
   
+//-----------------------------------------------MODELS--------------------------------------------
 
 // ---------------- USER MODEL ----------
 const UserSchema = new mongoose.Schema(
@@ -35,6 +24,7 @@ const UserSchema = new mongoose.Schema(
 );
 
 const User = mongoose.model("User", UserSchema);
+
 
 // ---------------- CHAT MODEL ----------
 const ChatSchema = new mongoose.Schema(
@@ -51,11 +41,6 @@ const ChatSchema = new mongoose.Schema(
 const Chat = mongoose.model("Chat", ChatSchema);
 
 
-
-
-
-// new addd
-
 // ---------------- SCHEDULE MODEL ----------
 const ScheduleSchema = new mongoose.Schema(
   {
@@ -71,12 +56,6 @@ const ScheduleSchema = new mongoose.Schema(
 
 const Schedule = mongoose.model("Schedule", ScheduleSchema);
 
-
-//  bss yhh  tkk
-
-
-//naya edit 31/01/26
-
 // ---------------- MOCK RESULT MODEL ----------
 const MockResultSchema = new mongoose.Schema(
   {
@@ -90,10 +69,6 @@ const MockResultSchema = new mongoose.Schema(
 const MockResult = mongoose.model("MockResult", MockResultSchema);
 
 
-//till here 
-
-// youtube ka start hai
-
 // ---------------- YOUTUBE FAVORITE MODEL ----------
 const FavoriteSchema = new mongoose.Schema(
   {
@@ -105,7 +80,6 @@ const FavoriteSchema = new mongoose.Schema(
 
 const Favorite = mongoose.model("Favorite", FavoriteSchema);
 
-// playlist ka hai
 
 // ---------------- PLAYLIST MODEL ----------------
 const PlaylistSchema = new mongoose.Schema(
@@ -125,9 +99,6 @@ const PlaylistSchema = new mongoose.Schema(
 const Playlist = mongoose.model("Playlist", PlaylistSchema);
 
 
-// playlist yha tk
-
-// youtube ka yha tk hai 
 
 
 
@@ -168,7 +139,6 @@ async function askGroq(message, topic, level) {
   }
 }
 
- 
 
 // new added 
 
@@ -179,208 +149,40 @@ async function generateStudySchedule(
   weakTopics
 ) {
   const subjectList = subjects.split(",").map(s => s.trim());
-  const weakList = weakTopics
-    ? weakTopics.split(",").map(w => w.trim())
-    : [];
+  const weakList = weakTopics ? weakTopics.split(",").map(w => w.trim()) : [];
 
   const today = new Date();
   const exam = new Date(examDate);
-  const daysLeft = Math.max(
-    Math.ceil((exam - today) / (1000 * 60 * 60 * 24)),
-    1
-  );
+  const daysLeft = Math.max(Math.ceil((exam - today) / (1000 * 60 * 60 * 24)), 1);
 
-  const dailyHours = Math.min(Number(dailyTime), 8); // industry safe cap
-  const learningHours = (dailyHours * 0.5).toFixed(1);
-  const practiceHours = (dailyHours * 0.3).toFixed(1);
-  const revisionHours = (dailyHours * 0.2).toFixed(1);
+  const dailyHours = Math.min(Number(dailyTime), 8);
+  const learningHours = Math.round(dailyHours * 0.5);
+  const practiceHours = Math.round(dailyHours * 0.3);
+  const revisionHours = Math.round(dailyHours * 0.2);
 
-  let plan = `📆 Exam Date: ${examDate}\n`;
-  plan += `⏳ Days Remaining: ${daysLeft}\n`;
-  plan += `⏰ Daily Study Time: ${dailyHours} hours\n`;
-  plan += `📘 Subjects: ${subjectList.join(", ")}\n\n`;
+  const dayPlans = [];
 
   for (let day = 1; day <= daysLeft; day++) {
     const subject1 = subjectList[(day - 1) % subjectList.length];
-    const subject2 =
-      subjectList[(day) % subjectList.length] || subject1;
+    const subject2 = subjectList[(day) % subjectList.length] || subject1;
+    const weakTopic = weakList.length > 0 ? weakList[(day - 1) % weakList.length] : "general";
 
-    const weakTopic =
-      weakList.length > 0
-        ? weakList[(day - 1) % weakList.length]
-        : "general concepts";
+    const date = new Date(today);
+    date.setDate(today.getDate() + day - 1);
+    const dateStr = date.toISOString().split("T")[0];
 
-    plan += `Day ${day}:\n`;
-    plan += `• ${subject1} → ${learningHours}h learning\n`;
-    plan += `• ${subject2} → ${practiceHours}h problem solving\n`;
-    plan += `• Weak focus → ${weakTopic}\n`;
-    plan += `• Revision → ${revisionHours}h (previous topics)\n`;
-
-    if (day % 7 === 0) {
-      plan += `• Weekly Review → Full-length revision + mock test\n`;
-    }
-
-    plan += `\n`;
+    dayPlans.push({
+      date: dateStr,
+      tasks: [
+        { subject: subject1, hours: learningHours, completed: false },
+        { subject: subject2, hours: practiceHours, completed: false },
+        { subject: "Revision", hours: revisionHours, completed: false },
+      ],
+    });
   }
 
-  plan += `🧠 Tips:\n`;
-  plan += `• Use focused 50–60 min sessions\n`;
-  plan += `• Take 5–10 min breaks\n`;
-  plan += `• Review mistakes daily\n`;
-  plan += `• Adjust intensity weekly\n`;
-
-  return plan;
+  return dayPlans; // return structured JSON
 }
-
-
-
-// yhii tkkk
-
-// new edit 31/01/2026
-
-// ---------------- MOCK QUESTION BANK ----------
-async function generateAIQuestions(subject, level = "beginner") {
-  // 27 feb
-
-// ---------------- GENERATE CODING QUESTIONS ----------------
-// ✅ OUTSIDE FUNCTION (GLOBAL)
-
-// ---------------- GENERATE CODING QUESTIONS ----------------
-async function generateCodingQuestions(subject) {
-  const prompt = `
-Generate 5 coding questions for ${subject}.
-Each question must include:
-- problem statement
-- difficulty
-Return STRICT JSON:
-[
-  { "question": "" }
-]
-`;
-
-  const response = await axios.post(
-    GROQ_URL,
-    {
-      model: GROQ_MODEL,
-      messages: [
-        { role: "system", content: "You are a programming exam generator." },
-        { role: "user", content: prompt },
-      ],
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-      },
-    }
-  );
-
-  return JSON.parse(response.data.choices[0].message.content);
-}
-
-// ---------------- CASE STUDY ----------------
-async function generateCaseStudyQuestions(subject) {
-  const prompt = `
-Generate 5 case study questions for ${subject}.
-Return JSON:
-[
-  { "question": "" }
-]
-`;
-
-  const response = await axios.post(
-    GROQ_URL,
-    {
-      model: GROQ_MODEL,
-      messages: [
-        { role: "system", content: "You are an exam creator." },
-        { role: "user", content: prompt },
-      ],
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-      },
-    }
-  );
-
-  return JSON.parse(response.data.choices[0].message.content);
-}
-// ---------------- GENERATE CASE STUDY QUESTIONS ----------------
-async function generateCaseStudyQuestions(subject) {
-  const prompt = `
-Generate 5 case-study based analytical questions for ${subject}.
-Each question must be scenario-based.
-Return STRICT JSON:
-
-[
-  {
-    "question": ""
-  }
-]
-`;
-
-  const response = await axios.post(
-    GROQ_URL,
-    {
-      model: GROQ_MODEL,
-      messages: [
-        { role: "system", content: "You are a professional exam creator." },
-        { role: "user", content: prompt },
-      ],
-      temperature: 0.4,
-      max_tokens: 800,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
-
-  return JSON.parse(response.data.choices[0].message.content);
-}
-
-  // yha tk 27 Feb
-  const prompt = `
-Generate 5 multiple choice questions for ${subject}.
-Difficulty: ${level}.
-Format STRICT JSON only.
-
-[
-  {
-    "question": "",
-    "options": ["", "", "", ""],
-    "answerIndex": 0
-  }
-]
-`;
-
-  const response = await axios.post(
-    GROQ_URL,
-    {
-      model: GROQ_MODEL,
-      messages: [
-        { role: "system", content: "You are an exam question generator." },
-        { role: "user", content: prompt },
-      ],
-      temperature: 0.3,
-      max_tokens: 700,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
-
-  return JSON.parse(response.data.choices[0].message.content);
-}
-
-
-
-// till here
 
 // ---------------- AUTH MIDDLEWARE ----
 const authMiddleware = (req, res, next) => {
@@ -394,6 +196,8 @@ const authMiddleware = (req, res, next) => {
     res.status(401).json({ error: "Invalid token" });
   }
 };
+
+
 
 // ---------------- SIGNUP --------------
 app.post("/api/auth/signup", async (req, res) => {
@@ -420,6 +224,8 @@ app.post("/api/auth/signup", async (req, res) => {
   });
 });
 
+
+
 // ---------------- LOGIN ---------------
 app.post("/api/auth/login", async (req, res) => {
   const { email, password } = req.body;
@@ -443,7 +249,10 @@ app.post("/api/auth/login", async (req, res) => {
     token,
     user: { id: user._id, email: user.email, username: user.username },
   });
+  localStorage.setItem("token", data.token);
 });
+
+
 
 // ---------------- CHAT API ------------
 app.post("/api/chat", authMiddleware, async (req, res) => {
@@ -473,145 +282,85 @@ app.post("/api/chat", authMiddleware, async (req, res) => {
   }
 });
 
-// newww 
 
 
 // ---------------- SMART SCHEDULER API -----
 app.post("/api/ai/schedule", authMiddleware, async (req, res) => {
   try {
     const { examDate, dailyTime, subjects, weakTopics } = req.body;
-
-    if (!examDate || !dailyTime || !subjects) {
+    if (!examDate || !dailyTime || !subjects)
       return res.status(400).json({ error: "Missing required fields" });
-    }
 
-    const schedule = await generateStudySchedule(
-      examDate,
-      dailyTime,
-      subjects,
-      weakTopics
-    );
+    const schedule = await generateStudySchedule(examDate, dailyTime, subjects, weakTopics);
 
-    // ✅ Save to DB (optional)
-    const savedSchedule = await Schedule.create({
+    // Save as string if needed
+    await Schedule.create({
       userId: req.user.id,
       examDate,
       dailyTime,
       subjects,
       weakTopics,
-      schedule,
+      schedule: JSON.stringify(schedule),
     });
 
-    res.json({
-      schedule,
-      id: savedSchedule._id,
-    });
+    res.json({ schedule }); // send structured JSON
   } catch (err) {
-    console.error("❌ SCHEDULER ERROR:", err);
+    console.error(err);
     res.status(500).json({ error: "Schedule generation failed" });
   }
 });
- 
-
-// yha tk
-
-//new eddit 31/01/2026
-
-// ---------------- START MOCK TEST ----------------
-// app.post("/api/mock/start", async (req, res) => {
-//   try {
-//     const { subject, weakTopic, lastScore } = req.body;
-
-//     console.log("📩 Incoming:", req.body);
-
-//     const mcqs = await generateAIQuestions(subject || "general");
-
-//     const formatted = mcqs.map((q) => ({
-//       ...q,
-//       type: "mcq",
-//     }));
-
-//     res.json({
-//       questions: formatted,
-//     });
-
-//   } catch (err) {
-//     console.error("❌ START ERROR:", err.message);
-
-//     res.json({
-//       questions: [
-//         {
-//           question: "Fallback Question: What is JavaScript?",
-//           options: ["Language", "Database", "OS", "Browser"],
-//           answerIndex: 0,
-//           type: "mcq",
-//           explanation: "JavaScript is a programming language.",
-//         },
-//       ],
-//     });
-//   }
-// });
 
 
-
-
-app.post("/api/mock/start", async (req, res) => {
+// ---------------- GET USER SCHEDULE ----------------
+app.get("/api/ai/schedule", authMiddleware, async (req, res) => {
   try {
-    const { subject } = req.body;
+    const schedule = await Schedule.findOne({ userId: req.user.id }).sort({ createdAt: -1 });
 
-    const mcqs1 = await generateAIQuestions(subject || "general");
-    const mcqs2 = await generateAIQuestions(subject || "general");
+    if (!schedule) {
+      return res.status(404).json({ error: "No schedule found" });
+    }
 
-    const mcqs = [...mcqs1, ...mcqs2];
-
-    const formatted = mcqs.map((q) => ({
-      ...q,
-      type: "mcq",
-    }));
-
-    res.json({
-      questions: formatted,
-    });
-
+    res.json(schedule);
   } catch (err) {
-    console.error("❌ START ERROR:", err.message);
+    console.error("❌ FETCH SCHEDULE ERROR:", err);
+    res.status(500).json({ error: "Failed to fetch schedule" });
   }
 });
 
-// till here 
-//27 feb
-// ---------------- NEXT SECTION (CODING / CASE) ----------------
-app.post("/api/mock/next", async (req, res) => {
+
+//-----------------MOCK START-------------
+
+app.post("/api/mock/start", async (req, res) => {
   try {
-    const { subject, type } = req.body;
+    console.log("🔥 START API HIT");
 
-    console.log("🔥 NEXT API HIT:", subject, type);
+    const { subject } = req.body;
 
-    let questions = [];
+    // ✅ sirf ek call (already 10 questions aa rahe)
+    const mcqs = await generateAIQuestions(subject || "general");
 
-    if (type === "coding") {
-      questions = await generateCodingQuestions(subject);
-      questions = questions.map(q => ({ ...q, type: "coding" }));
-    } else {
-      questions = await generateCaseStudyQuestions(subject);
-      questions = questions.map(q => ({ ...q, type: "case" }));
-    }
+    res.json({
+      questions: mcqs.map(q => ({
+        ...q,
+        type: "mcq"
+      }))
+    });
 
-    console.log("✅ GENERATED:", questions);
-
-    res.json({ questions });
   } catch (err) {
-    console.error("❌ NEXT ERROR FULL:", err);
+    console.error("❌ START ERROR:", err);
+
     res.json({
       questions: [
-        { question: "Fallback Coding Question", type: "coding" }
+        {
+          question: "Fallback Question",
+          options: ["A", "B", "C", "D"],
+          answerIndex: 0,
+          type: "mcq",
+        },
       ],
     });
   }
 });
-// till 27 feb
-
-// 27 feb
 
 async function generateAIFeedback(subject, weakTopic, score, lastScore) {
   const prompt = `
@@ -650,8 +399,6 @@ Keep it professional and encouraging.
   return response.data.choices[0].message.content;
 }
 
-//yha tk 27 feb
-//new edit 31/01/2026
 
 // ---------------- SUBMIT MOCK TEST ----------------
 app.post("/api/mock/submit", authMiddleware, async (req, res) => {
@@ -682,7 +429,8 @@ app.post("/api/mock/submit", authMiddleware, async (req, res) => {
     res.status(500).json({ error: "Submit failed" });
   }
 });
-// youtube start
+
+
 
 // ---------------- YOUTUBE AI SUGGESTIONS -------------
 app.post("/api/youtube/suggestions", async (req, res) => {
@@ -729,9 +477,10 @@ app.post("/api/youtube/suggestions", async (req, res) => {
   }
 });
 
-//yha bhe hai youtube
+
 
 // ---------------- GET FAVORITES ----------------
+
 app.get("/api/favorites", authMiddleware, async (req, res) => {
   try {
     const favs = await Favorite.find({ userId: req.user.id });
@@ -741,7 +490,9 @@ app.get("/api/favorites", authMiddleware, async (req, res) => {
   }
 });
 
+
 // ---------------- TOGGLE FAVORITE --------------
+
 app.post("/api/favorites/toggle", authMiddleware, async (req, res) => {
   try {
     const { video } = req.body;
@@ -768,13 +519,9 @@ app.post("/api/favorites/toggle", authMiddleware, async (req, res) => {
 });
 
 
-// yha tk youtube
-// youtube end
 
-
-//till here
-// app.use("/api/mock", require("./routes/mockTest.routes"));
 // ---------------- CREATE PLAYLIST ----------------
+
 app.post("/api/playlists/create", authMiddleware, async (req, res) => {
   try {
     const { name, videos } = req.body;
@@ -799,7 +546,9 @@ app.post("/api/playlists/create", authMiddleware, async (req, res) => {
   }
 });
 
+
 // ---------------- GET MY PLAYLISTS ----------------
+
 app.get("/api/playlists/my", authMiddleware, async (req, res) => {
   try {
     const playlists = await Playlist.find({ userId: req.user.id });
@@ -809,7 +558,9 @@ app.get("/api/playlists/my", authMiddleware, async (req, res) => {
   }
 });
 
+
 // ---------------- GET SINGLE PLAYLIST ----------------
+
 app.get("/api/playlists/:id", authMiddleware, async (req, res) => {
   try {
     const playlist = await Playlist.findOne({
@@ -826,7 +577,9 @@ app.get("/api/playlists/:id", authMiddleware, async (req, res) => {
   }
 });
 
+
 // ---------------- ADD VIDEO TO PLAYLIST ----------------
+
 app.post("/api/playlists/:id/add-video", authMiddleware, async (req, res) => {
   try {
     const { video } = req.body;
@@ -859,7 +612,9 @@ app.post("/api/playlists/:id/add-video", authMiddleware, async (req, res) => {
   }
 });
 
+
 // ---------------- REMOVE VIDEO ----------------
+
 app.delete(
   "/api/playlists/:id/remove-video/:videoId",
   authMiddleware,
@@ -886,6 +641,70 @@ app.delete(
   }
 );
 
+
+
+// ---------------- MOCK QUESTION BANK ----------
+async function generateAIQuestions(subject, level = "beginner") {
+  try {
+    const prompt = `
+Generate 10 multiple choice questions for ${subject}.
+
+Return ONLY JSON in this format:
+[
+  {
+    "question": "string",
+    "options": ["A", "B", "C", "D"],
+    "answerIndex": 0
+  }
+]
+`;
+
+    const response = await axios.post(
+      GROQ_URL,
+      {
+        model: GROQ_MODEL,
+        messages: [
+          { role: "system", content: "You generate MCQ questions." },
+          { role: "user", content: prompt },
+        ],
+        temperature: 0.4,
+        max_tokens: 1200,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    let text = response.data.choices[0].message.content;
+    console.log("🤖 RAW AI:", text);
+
+    // 🔥 JSON SAFE EXTRACTION
+    const start = text.indexOf("[");
+    const end = text.lastIndexOf("]");
+
+    if (start !== -1 && end !== -1) {
+      const jsonString = text.slice(start, end + 1);
+      return JSON.parse(jsonString);
+    }
+
+    throw new Error("Invalid JSON from AI");
+
+  } catch (err) {
+    console.error("❌ AI ERROR:", err.message);
+
+    // fallback (minimum safe)
+    return [
+      {
+        question: "Fallback: What is JavaScript?",
+        options: ["Language", "Database", "OS", "Browser"],
+        answerIndex: 0,
+      }
+    ];
+  }
+}
 
 // ---------------- SERVER --------------
 const PORT = process.env.PORT || 5000;
