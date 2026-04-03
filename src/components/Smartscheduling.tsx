@@ -99,12 +99,30 @@ export default function AISmartScheduler() {
           </button>
         </div>
 
-        {schedule && (
+        {/* {schedule && (
           <div className="mt-10 bg-[#020617] border border-cyan-500/20 p-6 rounded-2xl text-left">
             <h2 className="text-2xl font-bold mb-4 text-cyan-400">📅 AI Generated Study Plan</h2>
             <pre className="whitespace-pre-wrap text-sm leading-relaxed text-gray-300">{schedule}</pre>
           </div>
-        )}
+        )} */}
+
+{schedule && (
+  <div className="mt-10 bg-[#020617] border border-cyan-500/20 p-6 rounded-2xl text-left">
+    <h2 className="text-2xl font-bold mb-4 text-cyan-400">📅 AI Generated Study Plan</h2>
+    <div className="space-y-4">
+      {JSON.parse(schedule).map((day: any) => (
+        <div key={day.date}>
+          <strong>{day.date}</strong>
+          <ul className="list-disc ml-6">
+            {day.tasks.map((task: any, i: number) => (
+              <li key={i}>{task.subject} - {task.hours} hrs</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
       </div>
     </div>
   );

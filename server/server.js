@@ -249,7 +249,7 @@ app.post("/api/auth/login", async (req, res) => {
     token,
     user: { id: user._id, email: user.email, username: user.username },
   });
-  localStorage.setItem("token", data.token);
+  // localStorage.setItem("token", data.token);
 });
 
 
@@ -284,31 +284,61 @@ app.post("/api/chat", authMiddleware, async (req, res) => {
 
 
 
-// ---------------- SMART SCHEDULER API -----
+// // ---------------- SMART SCHEDULER API -----
+// app.post("/api/ai/schedule", authMiddleware, async (req, res) => {
+//   try {
+//     const { examDate, dailyTime, subjects, weakTopics } = req.body;
+//     if (!examDate || !dailyTime || !subjects)
+//       return res.status(400).json({ error: "Missing required fields" });
+
+//     const schedule = await generateStudySchedule(examDate, dailyTime, subjects, weakTopics);
+
+//     // Save as string if needed
+//     await Schedule.create({
+//       userId: req.user.id,
+//       examDate,
+//       dailyTime,
+//       subjects,
+//       weakTopics,
+//       schedule: JSON.stringify(schedule),
+//     });
+
+//     res.json({ schedule }); // send structured JSON
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ error: "Schedule generation failed" });
+//   }
+// });
+ 
+
+// ---------------- SMART SCHEDULER API (standalone) -----
 app.post("/api/ai/schedule", authMiddleware, async (req, res) => {
   try {
     const { examDate, dailyTime, subjects, weakTopics } = req.body;
+
     if (!examDate || !dailyTime || !subjects)
       return res.status(400).json({ error: "Missing required fields" });
 
     const schedule = await generateStudySchedule(examDate, dailyTime, subjects, weakTopics);
 
-    // Save as string if needed
-    await Schedule.create({
+    // Save as string in DB
+    const saved = await Schedule.create({
       userId: req.user.id,
       examDate,
       dailyTime,
       subjects,
       weakTopics,
-      schedule: JSON.stringify(schedule),
+      schedule: JSON.stringify(schedule), // store as string
     });
 
-    res.json({ schedule }); // send structured JSON
+    // Return stringified schedule for easy rendering
+    res.json({ schedule: JSON.stringify(schedule, null, 2) });
   } catch (err) {
-    console.error(err);
+    console.error("❌ SCHEDULER ERROR:", err);
     res.status(500).json({ error: "Schedule generation failed" });
   }
 });
+
 
 
 // ---------------- GET USER SCHEDULE ----------------
