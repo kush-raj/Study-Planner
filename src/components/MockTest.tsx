@@ -166,13 +166,14 @@ useEffect(() => {
 
 
       {/* Question Timer */}
+      {step > 0 && (
       <div className="flex justify-between items-center mb-4">
   <h2 className="text-lg font-bold text-cyan-400">
     Time Left: {Math.floor(timeLeft / 60)}:
     {(timeLeft % 60).toString().padStart(2, "0")}
   </h2>
 </div>
-
+)}
 
 
 
