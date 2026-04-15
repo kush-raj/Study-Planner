@@ -1,938 +1,12 @@
-// "use client";
-
-// import { useState } from "react";
-// import { Flame, BarChart3 } from "lucide-react";
-
-// type DailyTask = {
-//   subject: string;
-//   hours: number;
-//   completed: boolean;
-// };
-
-// type DayPlan = {
-//   date: string;
-//   tasks: DailyTask[];
-// };
-
-// export default function ProgressTracker() {
-//   const subjects = ["Math", "Physics", "Chemistry"];
-//   const totalDays = 14; // example
-//   const dailyHours = 2;
-
-//   // Initialize mock plan
-//   const [days, setDays] = useState<DayPlan[]>(
-//     Array.from({ length: totalDays }, (_, i) => ({
-//       date: `2026-04-${(i + 1).toString().padStart(2, "0")}`,
-//       tasks: subjects.map((sub) => ({
-//         subject: sub,
-//         hours: dailyHours,
-//         completed: false,
-//       })),
-//     }))
-//   );
-
-//   const toggleTask = (dayIndex: number, taskIndex: number) => {
-//     const updated = [...days];
-//     updated[dayIndex].tasks[taskIndex].completed =
-//       !updated[dayIndex].tasks[taskIndex].completed;
-//     setDays(updated);
-//   };
-
-//   // Calculate streak (consecutive fully completed days from last day)
-//   const streak = (() => {
-//     let count = 0;
-//     for (let i = days.length - 1; i >= 0; i--) {
-//       if (days[i].tasks.every((t) => t.completed)) count++;
-//       else break;
-//     }
-//     return count;
-//   })();
-
-//   // Overall progress
-//   const totalTasks = days.reduce((acc, d) => acc + d.tasks.length, 0);
-//   const completedTasks = days.reduce(
-//     (acc, d) => acc + d.tasks.filter((t) => t.completed).length,
-//     0
-//   );
-//   const overallProgress =
-//     totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
-
-//   // Subject-wise progress
-//   const subjectProgress = subjects.map((sub) => {
-//     const done = days.reduce(
-//       (acc, d) => acc + (d.tasks.find((t) => t.subject === sub)?.completed ? 1 : 0),
-//       0
-//     );
-//     return { subject: sub, progress: Math.round((done / totalDays) * 100) };
-//   });
-
-//   return (
-//     <div className="min-h-screen bg-[#0b0f19] text-gray-200 py-12 px-6">
-//       <div className="max-w-4xl mx-auto">
-//         <h2 className="text-4xl font-bold mb-6 text-center">
-//           Study Progress <span className="text-cyan-400">Dashboard</span>
-//         </h2>
-
-//         {/* Streak */}
-//         <div className="bg-[#020617] border border-cyan-500/20 p-6 rounded-xl mb-6 flex justify-between">
-//           <div>
-//             <h3 className="text-xl font-bold text-cyan-400">🔥 Current Streak</h3>
-//             <p className="text-gray-400 text-sm">Consistency matters</p>
-//           </div>
-//           <div className="text-3xl font-bold flex items-center gap-2">
-//             <Flame className="text-orange-500" /> {streak}
-//           </div>
-//         </div>
-
-//         {/* Overall progress */}
-//         <div className="bg-[#020617] border border-cyan-500/20 p-6 rounded-xl mb-10">
-//           <h3 className="text-xl font-bold mb-4 text-cyan-400">Overall Progress</h3>
-//           <div className="w-full bg-gray-800 h-4 rounded-full">
-//             <div
-//               className="h-full bg-cyan-500 transition-all"
-//               style={{ width: `${overallProgress}%` }}
-//             />
-//           </div>
-//           <p className="text-sm mt-2 text-gray-400">
-//             {completedTasks} / {totalTasks} tasks completed ({overallProgress}%)
-//           </p>
-//         </div>
-
-//         {/* Daily tasks */}
-//         <Section title="Daily Study Tasks">
-//           <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
-//             {days.map((day, dayIndex) => (
-//               <div key={day.date} className="bg-[#111827] p-4 rounded-xl">
-//                 <div className="text-sm mb-2">{day.date}</div>
-//                 {day.tasks.map((task, i) => (
-//                   <div key={i} className="flex justify-between mb-1">
-//                     <span>
-//                       {task.subject} — {task.hours}h
-//                     </span>
-//                     <button
-//                       onClick={() => toggleTask(dayIndex, i)}
-//                       className={`px-3 py-1 rounded ${
-//                         task.completed ? "bg-cyan-500 text-black" : "bg-[#020617]"
-//                       }`}
-//                     >
-//                       {task.completed ? "Done" : "Mark"}
-//                     </button>
-//                   </div>
-//                 ))}
-//               </div>
-//             ))}
-//           </div>
-//         </Section>
-
-//         {/* Subject-wise progress */}
-//         <Section title="Subject-wise Progress">
-//           {subjectProgress.map((s) => (
-//             <div key={s.subject} className="mb-4">
-//               <div className="flex justify-between text-sm mb-1">
-//                 <span>{s.subject}</span>
-//                 <span>{s.progress}%</span>
-//               </div>
-//               <div className="w-full bg-gray-800 h-3 rounded-full">
-//                 <div
-//                   className="h-full bg-cyan-500"
-//                   style={{ width: `${s.progress}%` }}
-//                 />
-//               </div>
-//             </div>
-//           ))}
-//         </Section>
-//       </div>
-//     </div>
-//   );
-// }
-
-// function Section({ title, children }: any) {
-//   return (
-//     <div className="bg-[#020617] border border-cyan-500/20 p-6 rounded-xl mb-10">
-//       <h3 className="text-xl font-bold mb-4 text-cyan-400 flex gap-2">
-//         <BarChart3 size={18} /> {title}
-//       </h3>
-//       {children}
-//     </div>
-//   );
-// }
-
-
-
-
-// import { useState, useEffect } from "react";
-// import { Flame, BarChart3 } from "lucide-react";
-
-// type DailyTask = {
-//   subject: string;
-//   hours: number;
-//   completed: boolean;
-// };
-
-// type DayPlan = {
-//   date: string;
-//   tasks: DailyTask[];
-// };
-
-// export default function ProgressTracker() {
-//   const subjects = ["Math", "Physics", "Chemistry"];
-//   const totalDays = 14;
-//   const dailyHours = 2;
-
-//   const [days, setDays] = useState<DayPlan[]>(
-//     Array.from({ length: totalDays }, (_, i) => ({
-//       date: `2026-04-${(i + 1).toString().padStart(2, "0")}`,
-//       tasks: subjects.map((sub) => ({
-//         subject: sub,
-//         hours: dailyHours,
-//         completed: false,
-//       })),
-//     }))
-//   );
-
-//   const toggleTask = (dayIndex: number, taskIndex: number) => {
-//     const updated = [...days];
-//     updated[dayIndex].tasks[taskIndex].completed =
-//       !updated[dayIndex].tasks[taskIndex].completed;
-//     setDays(updated);
-//   };
-
-//   // Load AI schedule from localStorage
-//   useEffect(() => {
-//     const handleUpdate = (e: any) => {
-//       const scheduleStr = e.detail;
-  
-//       if (!scheduleStr) return;
-  
-//       // Parse AI schedule: try JSON first, fallback to string
-//       let newDays: DayPlan[] = [];
-  
-//       try {
-//         // If AI returns array of { date, tasks: [{subject, hours}] }
-//         const parsed = JSON.parse(scheduleStr);
-//         if (Array.isArray(parsed)) {
-//           newDays = parsed.map((d: any) => ({
-//             date: d.date,
-//             tasks: d.tasks.map((t: any) => ({
-//               subject: t.subject,
-//               hours: t.hours,
-//               completed: false,
-//             })),
-//           }));
-//         }
-//       } catch {
-//         // Fallback: parse string format "YYYY-MM-DD: Math-2h, Physics-2h"
-//         newDays = scheduleStr.split("\n").map((line: string) => {
-//           const [datePart, tasksPart] = line.split(":");
-//           const taskList = tasksPart.split(",").map((t: string) => {
-//             const [subject, hours] = t.trim().split("-");
-//             return { subject, hours: parseInt(hours), completed: false };
-//           });
-//           return { date: datePart.trim(), tasks: taskList };
-//         });
-//       }
-  
-//       if (newDays.length > 0) setDays(newDays);
-//     };
-  
-//     window.addEventListener("scheduleUpdated", handleUpdate);
-//     return () => window.removeEventListener("scheduleUpdated", handleUpdate);
-//   }, []);
-
-//   const streak = (() => {
-//     let count = 0;
-//     for (let i = days.length - 1; i >= 0; i--) {
-//       if (days[i].tasks.every((t) => t.completed)) count++;
-//       else break;
-//     }
-//     return count;
-//   })();
-
-//   const totalTasks = days.reduce((acc, d) => acc + d.tasks.length, 0);
-//   const completedTasks = days.reduce(
-//     (acc, d) => acc + d.tasks.filter((t) => t.completed).length,
-//     0
-//   );
-//   const overallProgress =
-//     totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
-
-//   const subjectProgress = subjects.map((sub) => {
-//     const done = days.reduce(
-//       (acc, d) => acc + (d.tasks.find((t) => t.subject === sub)?.completed ? 1 : 0),
-//       0
-//     );
-//     return { subject: sub, progress: Math.round((done / totalDays) * 100) };
-//   });
-
-//   return (
-//     <div className="min-h-screen bg-[#0b0f19] text-gray-200 py-12 px-6">
-//       <div className="max-w-4xl mx-auto">
-//         <h2 className="text-4xl font-bold mb-6 text-center">
-//           Study Progress <span className="text-cyan-400">Dashboard</span>
-//         </h2>
-
-//         <div className="bg-[#020617] border border-cyan-500/20 p-6 rounded-xl mb-6 flex justify-between">
-//           <div>
-//             <h3 className="text-xl font-bold text-cyan-400">🔥 Current Streak</h3>
-//             <p className="text-gray-400 text-sm">Consistency matters</p>
-//           </div>
-//           <div className="text-3xl font-bold flex items-center gap-2">
-//             <Flame className="text-orange-500" /> {streak}
-//           </div>
-//         </div>
-
-//         <div className="bg-[#020617] border border-cyan-500/20 p-6 rounded-xl mb-10">
-//           <h3 className="text-xl font-bold mb-4 text-cyan-400">Overall Progress</h3>
-//           <div className="w-full bg-gray-800 h-4 rounded-full">
-//             <div
-//               className="h-full bg-cyan-500 transition-all"
-//               style={{ width: `${overallProgress}%` }}
-//             />
-//           </div>
-//           <p className="text-sm mt-2 text-gray-400">
-//             {completedTasks} / {totalTasks} tasks completed ({overallProgress}%)
-//           </p>
-//         </div>
-
-//         <Section title="Daily Study Tasks">
-//           <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
-//             {days.map((day, dayIndex) => (
-//               <div key={day.date} className="bg-[#111827] p-4 rounded-xl">
-//                 <div className="text-sm mb-2">{day.date}</div>
-//                 {day.tasks.map((task, i) => (
-//                   <div key={i} className="flex justify-between mb-1">
-//                     <span>
-//                       {task.subject} — {task.hours}h
-//                     </span>
-//                     <button
-//                       onClick={() => toggleTask(dayIndex, i)}
-//                       className={`px-3 py-1 rounded ${
-//                         task.completed ? "bg-cyan-500 text-black" : "bg-[#020617]"
-//                       }`}
-//                     >
-//                       {task.completed ? "Done" : "Mark"}
-//                     </button>
-//                   </div>
-//                 ))}
-//               </div>
-//             ))}
-//           </div>
-//         </Section>
-
-//         <Section title="Subject-wise Progress">
-//           {subjectProgress.map((s) => (
-//             <div key={s.subject} className="mb-4">
-//               <div className="flex justify-between text-sm mb-1">
-//                 <span>{s.subject}</span>
-//                 <span>{s.progress}%</span>
-//               </div>
-//               <div className="w-full bg-gray-800 h-3 rounded-full">
-//                 <div
-//                   className="h-full bg-cyan-500"
-//                   style={{ width: `${s.progress}%` }}
-//                 />
-//               </div>
-//             </div>
-//           ))}
-//         </Section>
-//       </div>
-//     </div>
-//   );
-// }
-
-// function Section({ title, children }: any) {
-//   return (
-//     <div className="bg-[#020617] border border-cyan-500/20 p-6 rounded-xl mb-10">
-//       <h3 className="text-xl font-bold mb-4 text-cyan-400 flex gap-2">
-//         <BarChart3 size={18} /> {title}
-//       </h3>
-//       {children}
-//     </div>
-//   );
-// }   
-
-//2
-// import { useState, useEffect } from "react";
-// import { Flame, BarChart3 } from "lucide-react";
-
-// type DailyTask = {
-//   subject: string;
-//   hours: number;
-//   completed: boolean;
-// };
-
-// type DayPlan = {
-//   date: string;
-//   tasks: DailyTask[];
-// };
-
-// export default function ProgressTracker() {
-//   const subjects = ["Math", "Physics", "Chemistry"];
-//   const totalDays = 14;
-//   const dailyHours = 2;
-
-//   const [days, setDays] = useState<DayPlan[]>(
-//     Array.from({ length: totalDays }, (_, i) => ({
-//       date: `2026-04-${(i + 1).toString().padStart(2, "0")}`,
-//       tasks: subjects.map((sub) => ({
-//         subject: sub,
-//         hours: dailyHours,
-//         completed: false,
-//       })),
-//     }))
-//   );
-
-//   const toggleTask = (dayIndex: number, taskIndex: number) => {
-//     const updated = [...days];
-//     updated[dayIndex].tasks[taskIndex].completed =
-//       !updated[dayIndex].tasks[taskIndex].completed;
-//     setDays(updated);
-//   };
-
-//   // Listen for schedule updates from AISmartScheduler
-//   useEffect(() => {
-//     const handleUpdate = (e: any) => {
-//       const scheduleStr = e.detail;
-//       if (!scheduleStr) return;
-
-//       let newDays: DayPlan[] = [];
-
-//       try {
-//         // Try JSON parsing first (preferred)
-//         const parsed = JSON.parse(scheduleStr);
-//         if (Array.isArray(parsed)) {
-//           newDays = parsed.map((d: any) => ({
-//             date: d.date,
-//             tasks: d.tasks.map((t: any) => ({
-//               subject: t.subject,
-//               hours: t.hours,
-//               completed: false,
-//             })),
-//           }));
-//         }
-//       } catch {
-//         // Fallback: parse string "YYYY-MM-DD: Math-2h, Physics-2h"
-//         newDays = scheduleStr.split("\n").map((line: string) => {
-//           const [datePart, tasksPart] = line.split(":");
-//           const taskList = tasksPart.split(",").map((t: string) => {
-//             const [subject, hours] = t.trim().split("-");
-//             return { subject, hours: parseInt(hours), completed: false };
-//           });
-//           return { date: datePart.trim(), tasks: taskList };
-//         });
-//       }
-
-//       if (newDays.length > 0) setDays(newDays);
-//     };
-
-//     window.addEventListener("scheduleUpdated", handleUpdate);
-//     return () => window.removeEventListener("scheduleUpdated", handleUpdate);
-//   }, []);
-
-//   // Calculate streak
-//   const streak = (() => {
-//     let count = 0;
-//     for (let i = days.length - 1; i >= 0; i--) {
-//       if (days[i].tasks.every((t) => t.completed)) count++;
-//       else break;
-//     }
-//     return count;
-//   })();
-
-//   // Overall progress
-//   const totalTasks = days.reduce((acc, d) => acc + d.tasks.length, 0);
-//   const completedTasks = days.reduce(
-//     (acc, d) => acc + d.tasks.filter((t) => t.completed).length,
-//     0
-//   );
-//   const overallProgress =
-//     totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
-
-//   // Subject-wise progress (calculated dynamically from updated days)
-//   const subjectProgress = subjects.map((sub) => {
-//     const done = days.reduce(
-//       (acc, d) => acc + (d.tasks.find((t) => t.subject === sub)?.completed ? 1 : 0),
-//       0
-//     );
-//     return { subject: sub, progress: Math.round((done / totalDays) * 100) };
-//   });
-
-//   return (
-//     <div className="min-h-screen bg-[#0b0f19] text-gray-200 py-12 px-6">
-//       <div className="max-w-4xl mx-auto">
-//         <h2 className="text-4xl font-bold mb-6 text-center">
-//           Study Progress <span className="text-cyan-400">Dashboard</span>
-//         </h2>
-
-//         {/* Streak */}
-//         <div className="bg-[#020617] border border-cyan-500/20 p-6 rounded-xl mb-6 flex justify-between">
-//           <div>
-//             <h3 className="text-xl font-bold text-cyan-400">🔥 Current Streak</h3>
-//             <p className="text-gray-400 text-sm">Consistency matters</p>
-//           </div>
-//           <div className="text-3xl font-bold flex items-center gap-2">
-//             <Flame className="text-orange-500" /> {streak}
-//           </div>
-//         </div>
-
-//         {/* Overall progress */}
-//         <div className="bg-[#020617] border border-cyan-500/20 p-6 rounded-xl mb-10">
-//           <h3 className="text-xl font-bold mb-4 text-cyan-400">Overall Progress</h3>
-//           <div className="w-full bg-gray-800 h-4 rounded-full">
-//             <div
-//               className="h-full bg-cyan-500 transition-all"
-//               style={{ width: `${overallProgress}%` }}
-//             />
-//           </div>
-//           <p className="text-sm mt-2 text-gray-400">
-//             {completedTasks} / {totalTasks} tasks completed ({overallProgress}%)
-//           </p>
-//         </div>
-
-//         {/* Daily tasks */}
-//         <Section title="Daily Study Tasks">
-//           <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
-//             {days.map((day, dayIndex) => (
-//               <div key={day.date} className="bg-[#111827] p-4 rounded-xl">
-//                 <div className="text-sm mb-2">{day.date}</div>
-//                 {day.tasks.map((task, i) => (
-//                   <div key={i} className="flex justify-between mb-1">
-//                     <span>
-//                       {task.subject} — {task.hours}h
-//                     </span>
-//                     <button
-//                       onClick={() => toggleTask(dayIndex, i)}
-//                       className={`px-3 py-1 rounded ${
-//                         task.completed ? "bg-cyan-500 text-black" : "bg-[#020617]"
-//                       }`}
-//                     >
-//                       {task.completed ? "Done" : "Mark"}
-//                     </button>
-//                   </div>
-//                 ))}
-//               </div>
-//             ))}
-//           </div>
-//         </Section>
-
-//         {/* Subject-wise progress */}
-//         <Section title="Subject-wise Progress">
-//           {subjectProgress.map((s) => (
-//             <div key={s.subject} className="mb-4">
-//               <div className="flex justify-between text-sm mb-1">
-//                 <span>{s.subject}</span>
-//                 <span>{s.progress}%</span>
-//               </div>
-//               <div className="w-full bg-gray-800 h-3 rounded-full">
-//                 <div
-//                   className="h-full bg-cyan-500"
-//                   style={{ width: `${s.progress}%` }}
-//                 />
-//               </div>
-//             </div>
-//           ))}
-//         </Section>
-//       </div>
-//     </div>
-//   );
-// }
-
-// function Section({ title, children }: any) {
-//   return (
-//     <div className="bg-[#020617] border border-cyan-500/20 p-6 rounded-xl mb-10">
-//       <h3 className="text-xl font-bold mb-4 text-cyan-400 flex gap-2">
-//         <BarChart3 size={18} /> {title}
-//       </h3>
-//       {children}
-//     </div>
-//   );
-// }
-
-
-// import { useState, useEffect } from "react";
-// import { Flame, BarChart3 } from "lucide-react";
-
-// type DailyTask = {
-//   subject: string;
-//   hours: number;
-//   completed: boolean;
-// };
-
-// type DayPlan = {
-//   date: string;
-//   tasks: DailyTask[];
-// };
-
-// export default function ProgressTracker() {
-//   // Start with empty days array
-//   const [days, setDays] = useState<DayPlan[]>([]);
-
-//   const toggleTask = (dayIndex: number, taskIndex: number) => {
-//     const updated = [...days];
-//     updated[dayIndex].tasks[taskIndex].completed =
-//       !updated[dayIndex].tasks[taskIndex].completed;
-//     setDays(updated);
-//   };
-
-//   // Listen for schedule updates from AISmartScheduler
-//   useEffect(() => {
-//     const handleUpdate = (e: any) => {
-//       const scheduleStr = e.detail;
-//       if (!scheduleStr) return;
-
-//       let newDays: DayPlan[] = [];
-
-//       try {
-//         // Try JSON parsing first
-//         const parsed = JSON.parse(scheduleStr);
-//         if (Array.isArray(parsed)) {
-//           newDays = parsed.map((d: any) => ({
-//             date: d.date,
-//             tasks: d.tasks.map((t: any) => ({
-//               subject: t.subject,
-//               hours: t.hours,
-//               completed: false,
-//             })),
-//           }));
-//         }
-//       } catch {
-//         // Fallback parse string "YYYY-MM-DD: Math-2h, Physics-2h"
-//         newDays = scheduleStr.split("\n").map((line: string) => {
-//           const [datePart, tasksPart] = line.split(":");
-//           const taskList = tasksPart.split(",").map((t: string) => {
-//             const [subject, hours] = t.trim().split("-");
-//             return { subject, hours: parseInt(hours), completed: false };
-//           });
-//           return { date: datePart.trim(), tasks: taskList };
-//         });
-//       }
-
-//       if (newDays.length > 0) setDays(newDays);
-//     };
-
-//     window.addEventListener("scheduleUpdated", handleUpdate);
-//     return () => window.removeEventListener("scheduleUpdated", handleUpdate);
-//   }, []);
-
-//   // If no data, show placeholder
-//   const hasData = days.length > 0;
-
-//   // Calculate streak, overall and subject-wise progress only if data exists
-//   const streak = hasData
-//     ? (() => {
-//         let count = 0;
-//         for (let i = days.length - 1; i >= 0; i--) {
-//           if (days[i].tasks.every((t) => t.completed)) count++;
-//           else break;
-//         }
-//         return count;
-//       })()
-//     : 0;
-
-//   const totalTasks = hasData ? days.reduce((acc, d) => acc + d.tasks.length, 0) : 0;
-//   const completedTasks = hasData
-//     ? days.reduce((acc, d) => acc + d.tasks.filter((t) => t.completed).length, 0)
-//     : 0;
-//   const overallProgress = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
-
-//   const subjects = hasData
-//     ? Array.from(new Set(days.flatMap((d) => d.tasks.map((t) => t.subject))))
-//     : [];
-
-//   const subjectProgress = subjects.map((sub) => {
-//     const done = days.reduce(
-//       (acc, d) => acc + (d.tasks.find((t) => t.subject === sub)?.completed ? 1 : 0),
-//       0
-//     );
-//     return { subject: sub, progress: Math.round((done / days.length) * 100) };
-//   });
-
-//   return (
-//     <div className="min-h-screen bg-[#0b0f19] text-gray-200 py-12 px-6">
-//       <div className="max-w-4xl mx-auto">
-//         <h2 className="text-4xl font-bold mb-6 text-center">
-//           Study Progress <span className="text-cyan-400">Dashboard</span>
-//         </h2>
-
-//         {hasData && (
-//           <>
-//             {/* Streak */}
-//             <div className="bg-[#020617] border border-cyan-500/20 p-6 rounded-xl mb-6 flex justify-between">
-//               <div>
-//                 <h3 className="text-xl font-bold text-cyan-400">🔥 Current Streak</h3>
-//                 <p className="text-gray-400 text-sm">Consistency matters</p>
-//               </div>
-//               <div className="text-3xl font-bold flex items-center gap-2">
-//                 <Flame className="text-orange-500" /> {streak}
-//               </div>
-//             </div>
-
-//             {/* Overall progress */}
-//             <div className="bg-[#020617] border border-cyan-500/20 p-6 rounded-xl mb-10">
-//               <h3 className="text-xl font-bold mb-4 text-cyan-400">Overall Progress</h3>
-//               <div className="w-full bg-gray-800 h-4 rounded-full">
-//                 <div
-//                   className="h-full bg-cyan-500 transition-all"
-//                   style={{ width: `${overallProgress}%` }}
-//                 />
-//               </div>
-//               <p className="text-sm mt-2 text-gray-400">
-//                 {completedTasks} / {totalTasks} tasks completed ({overallProgress}%)
-//               </p>
-//             </div>
-
-//             {/* Daily tasks */}
-//             <Section title="Daily Study Tasks">
-//               <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
-//                 {days.map((day, dayIndex) => (
-//                   <div key={day.date} className="bg-[#111827] p-4 rounded-xl">
-//                     <div className="text-sm mb-2">{day.date}</div>
-//                     {day.tasks.map((task, i) => (
-//                       <div key={i} className="flex justify-between mb-1">
-//                         <span>
-//                           {task.subject} — {task.hours}h
-//                         </span>
-//                         <button
-//                           onClick={() => toggleTask(dayIndex, i)}
-//                           className={`px-3 py-1 rounded ${
-//                             task.completed ? "bg-cyan-500 text-black" : "bg-[#020617]"
-//                           }`}
-//                         >
-//                           {task.completed ? "Done" : "Mark"}
-//                         </button>
-//                       </div>
-//                     ))}
-//                   </div>
-//                 ))}
-//               </div>
-//             </Section>
-
-//             {/* Subject-wise progress */}
-//             <Section title="Subject-wise Progress">
-//               {subjectProgress.map((s) => (
-//                 <div key={s.subject} className="mb-4">
-//                   <div className="flex justify-between text-sm mb-1">
-//                     <span>{s.subject}</span>
-//                     <span>{s.progress}%</span>
-//                   </div>
-//                   <div className="w-full bg-gray-800 h-3 rounded-full">
-//                     <div
-//                       className="h-full bg-cyan-500"
-//                       style={{ width: `${s.progress}%` }}
-//                     />
-//                   </div>
-//                 </div>
-//               ))}
-//             </Section>
-//           </>
-//         )}
-
-//         {!hasData && (
-//           <p className="text-gray-400 text-center mt-20">
-//             No schedule generated yet. Click "Generate AI Schedule" to see your study plan.
-//           </p>
-//         )}
-//       </div>
-//     </div>
-//   );
-// }
-
-// function Section({ title, children }: any) {
-//   return (
-//     <div className="bg-[#020617] border border-cyan-500/20 p-6 rounded-xl mb-10">
-//       <h3 className="text-xl font-bold mb-4 text-cyan-400 flex gap-2">
-//         <BarChart3 size={18} /> {title}
-//       </h3>
-//       {children}
-//     </div>
-//   );
-// }    
-
-// 3
-
-// import { useState, useEffect } from "react";
-// import { Flame, BarChart3 } from "lucide-react";
-
-// type DailyTask = {
-//   subject: string;
-//   hours: number;
-//   completed: boolean;
-// };
-
-// type DayPlan = {
-//   date: string;
-//   tasks: DailyTask[];
-// };
-
-// export default function ProgressTracker() {
-//   const [days, setDays] = useState<DayPlan[]>([]); // start blank
-
-//   // ---------------- SUBJECTS ----------------
-//   const subjects = ["Math", "Physics", "Chemistry"];
-
-//   // ---------------- FETCH AI SCHEDULE ----------------
-//   const fetchAISchedule = async () => {
-//     try {
-//       const token = localStorage.getItem("token");
-//       const res = await fetch("http://localhost:5000/api/ai/schedule", {
-//         method: "GET",
-//         headers: { Authorization: `Bearer ${token}` },
-//       });
-
-//       const data = await res.json();
-
-//       if (data.schedule) {
-//         // Transform server schedule into DayPlan format
-//         const lines = data.schedule.split("\n");
-//         const newDays: DayPlan[] = lines
-//           .filter((line) => line.includes("Day "))
-//           .map((line) => {
-//             const tasks: DailyTask[] = [];
-//             const parts = line.split("•").slice(1); // skip "Day X:"
-//             parts.forEach((p) => {
-//               const match = p.trim().match(/(.+?) → (\d+(?:\.\d+)?)h/);
-//               if (match) {
-//                 tasks.push({ subject: match[1].trim(), hours: parseFloat(match[2]), completed: false });
-//               }
-//             });
-//             return { date: "Scheduled", tasks };
-//           });
-
-//         setDays(newDays);
-//       }
-//     } catch (err) {
-//       console.error("Failed to fetch AI schedule:", err);
-//     }
-//   };
-
-//   // ---------------- LISTEN FOR GENERATE BUTTON ----------------
-//   useEffect(() => {
-//     const handleUpdate = () => {
-//       fetchAISchedule();
-//     };
-//     window.addEventListener("scheduleUpdated", handleUpdate);
-//     return () => window.removeEventListener("scheduleUpdated", handleUpdate);
-//   }, []);
-
-//   // ---------------- TOGGLE TASK ----------------
-//   const toggleTask = (dayIndex: number, taskIndex: number) => {
-//     const updated = [...days];
-//     updated[dayIndex].tasks[taskIndex].completed = !updated[dayIndex].tasks[taskIndex].completed;
-//     setDays(updated);
-//   };
-
-//   // ---------------- STREAK & PROGRESS ----------------
-//   const streak = (() => {
-//     let count = 0;
-//     for (let i = days.length - 1; i >= 0; i--) {
-//       if (days[i].tasks.every((t) => t.completed)) count++;
-//       else break;
-//     }
-//     return count;
-//   })();
-
-//   const totalTasks = days.reduce((acc, d) => acc + d.tasks.length, 0);
-//   const completedTasks = days.reduce(
-//     (acc, d) => acc + d.tasks.filter((t) => t.completed).length,
-//     0
-//   );
-//   const overallProgress = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
-
-//   const subjectProgress = subjects.map((sub) => {
-//     const done = days.reduce(
-//       (acc, d) => acc + (d.tasks.find((t) => t.subject === sub)?.completed ? 1 : 0),
-//       0
-//     );
-//     return { subject: sub, progress: days.length === 0 ? 0 : Math.round((done / days.length) * 100) };
-//   });
-
-//   return (
-//     <div className="min-h-screen bg-[#0b0f19] text-gray-200 py-12 px-6">
-//       <div className="max-w-4xl mx-auto">
-//         <h2 className="text-4xl font-bold mb-6 text-center">
-//           Study Progress <span className="text-cyan-400">Dashboard</span>
-//         </h2>
-
-//         <div className="bg-[#020617] border border-cyan-500/20 p-6 rounded-xl mb-6 flex justify-between">
-//           <div>
-//             <h3 className="text-xl font-bold text-cyan-400">🔥 Current Streak</h3>
-//             <p className="text-gray-400 text-sm">Consistency matters</p>
-//           </div>
-//           <div className="text-3xl font-bold flex items-center gap-2">
-//             <Flame className="text-orange-500" /> {streak}
-//           </div>
-//         </div>
-
-//         <div className="bg-[#020617] border border-cyan-500/20 p-6 rounded-xl mb-10">
-//           <h3 className="text-xl font-bold mb-4 text-cyan-400">Overall Progress</h3>
-//           <div className="w-full bg-gray-800 h-4 rounded-full">
-//             <div className="h-full bg-cyan-500 transition-all" style={{ width: `${overallProgress}%` }} />
-//           </div>
-//           <p className="text-sm mt-2 text-gray-400">
-//             {completedTasks} / {totalTasks} tasks completed ({overallProgress}%)
-//           </p>
-//         </div>
-
-//         <Section title="Daily Study Tasks">
-//           <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
-//             {days.length === 0 && <p className="text-gray-500">Click "Generate AI Schedule" to see your tasks</p>}
-//             {days.map((day, dayIndex) => (
-//               <div key={dayIndex} className="bg-[#111827] p-4 rounded-xl">
-//                 <div className="text-sm mb-2">{day.date}</div>
-//                 {day.tasks.map((task, i) => (
-//                   <div key={i} className="flex justify-between mb-1">
-//                     <span>
-//                       {task.subject} — {task.hours}h
-//                     </span>
-//                     <button
-//                       onClick={() => toggleTask(dayIndex, i)}
-//                       className={`px-3 py-1 rounded ${task.completed ? "bg-cyan-500 text-black" : "bg-[#020617]"}`}
-//                     >
-//                       {task.completed ? "Done" : "Mark"}
-//                     </button>
-//                   </div>
-//                 ))}
-//               </div>
-//             ))}
-//           </div>
-//         </Section>
-
-//         <Section title="Subject-wise Progress">
-//           {subjectProgress.map((s) => (
-//             <div key={s.subject} className="mb-4">
-//               <div className="flex justify-between text-sm mb-1">
-//                 <span>{s.subject}</span>
-//                 <span>{s.progress}%</span>
-//               </div>
-//               <div className="w-full bg-gray-800 h-3 rounded-full">
-//                 <div className="h-full bg-cyan-500" style={{ width: `${s.progress}%` }} />
-//               </div>
-//             </div>
-//           ))}
-//         </Section>
-//       </div>
-//     </div>
-//   );
-// }
-
-// function Section({ title, children }: any) {
-//   return (
-//     <div className="bg-[#020617] border border-cyan-500/20 p-6 rounded-xl mb-10">
-//       <h3 className="text-xl font-bold mb-4 text-cyan-400 flex gap-2">
-//         <BarChart3 size={18} /> {title}
-//       </h3>
-//       {children}
-//     </div>
-//   );
-// }
-
-//4
-
-import { useState, useEffect } from "react";
-import { Flame, BarChart3 } from "lucide-react";
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
+import { Flame, BarChart3, CheckCircle2, Circle, Trophy, Target, Clock, TrendingUp, Calendar } from "lucide-react";
+import { API_URL, SCHEDULE_EVENT, AUTH_EVENT, isLoggedIn } from "@/lib/api";
 
 type DailyTask = {
   subject: string;
+  type: string;
   hours: number;
   completed: boolean;
 };
@@ -943,178 +17,449 @@ type DayPlan = {
 };
 
 export default function ProgressTracker() {
-  const [days, setDays] = useState<DayPlan[]>([]); // starts empty
-  const [subjects, setSubjects] = useState<string[]>([]); // starts empty
+  const [days, setDays] = useState<DayPlan[]>([]);
+  const [streak, setStreak] = useState(0);
+  const [examDate, setExamDate] = useState("");
+  const [subjectsList, setSubjectsList] = useState<string[]>([]);
+  const [loggedIn, setLoggedIn] = useState(isLoggedIn());
+  const [loading, setLoading] = useState(false);
+  const [savingTask, setSavingTask] = useState<string | null>(null);
 
-  const toggleTask = (dayIndex: number, taskIndex: number) => {
-    const updated = [...days];
-    updated[dayIndex].tasks[taskIndex].completed =
-      !updated[dayIndex].tasks[taskIndex].completed;
-    setDays(updated);
-  };
+  // Load schedule from API
+  const loadSchedule = useCallback(async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
 
-  // Listen for schedule update
-  useEffect(() => {
-    const handleUpdate = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) return;
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/api/ai/schedule`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-        const res = await fetch("http://localhost:5000/api/ai/schedule", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!res.ok) return;
-        const data = await res.json();
-
-        // Parse the schedule string into DayPlan[]
-        const scheduleText: string = data.schedule;
-        const lines = scheduleText.split("\n").filter((l) => l.startsWith("Day"));
-        const newDays: DayPlan[] = lines.map((line) => {
-          const taskMatches = line.match(/• (.+) → (\d+\.?\d*)h (\w+)/g) || [];
-          const tasks = taskMatches.map((t) => {
-            const parts = t.split("→");
-            const subject = parts[0].replace("•", "").trim();
-            const hours = parseFloat(parts[1]);
-            return { subject, hours, completed: false };
-          });
-          return { date: line.split(":")[0], tasks };
-        });
-
-        // Extract subjects
-        const subjectSet = new Set<string>();
-        newDays.forEach((d) => d.tasks.forEach((t) => subjectSet.add(t.subject)));
-
-        setDays(newDays);
-        setSubjects(Array.from(subjectSet));
-      } catch (err) {
-        console.error("Failed to load schedule", err);
+      if (!res.ok) {
+        setDays([]);
+        return;
       }
-    };
 
-    window.addEventListener("scheduleUpdated", handleUpdate);
-    return () => window.removeEventListener("scheduleUpdated", handleUpdate);
+      const data = await res.json();
+
+      if (Array.isArray(data.schedule)) {
+        setDays(data.schedule);
+        setStreak(data.streak || 0);
+        if (data.examDate) setExamDate(data.examDate);
+        if (data.subjects) {
+          setSubjectsList(data.subjects.split(",").map((s: string) => s.trim()).filter(Boolean));
+        }
+        // Extract unique subjects from schedule
+        const subs = new Set<string>();
+        data.schedule.forEach((d: DayPlan) => d.tasks.forEach((t) => subs.add(t.subject)));
+        if (subs.size > 0) setSubjectsList(Array.from(subs));
+      }
+    } catch {
+      // Silent fail
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  // Streak
-  const streak = (() => {
-    let count = 0;
-    for (let i = days.length - 1; i >= 0; i--) {
-      if (days[i].tasks.every((t) => t.completed)) count++;
-      else break;
-    }
-    return count;
-  })();
+  // Listen for auth changes
+  useEffect(() => {
+    const handleAuth = (e: any) => {
+      const user = e.detail;
+      setLoggedIn(!!user);
+      if (!user) {
+        setDays([]);
+        setStreak(0);
+      }
+    };
+    window.addEventListener(AUTH_EVENT, handleAuth);
+    return () => window.removeEventListener(AUTH_EVENT, handleAuth);
+  }, []);
 
+  // Listen for schedule updates from AI Scheduler
+  useEffect(() => {
+    const handleScheduleUpdate = (e: any) => {
+      const schedule = e.detail;
+      if (Array.isArray(schedule)) {
+        setDays(schedule);
+        setStreak(0);
+        // Extract subjects
+        const subs = new Set<string>();
+        schedule.forEach((d: DayPlan) => d.tasks.forEach((t: DailyTask) => subs.add(t.subject)));
+        setSubjectsList(Array.from(subs));
+      }
+    };
+    window.addEventListener(SCHEDULE_EVENT, handleScheduleUpdate);
+    return () => window.removeEventListener(SCHEDULE_EVENT, handleScheduleUpdate);
+  }, []);
+
+  // Load existing schedule on mount
+  useEffect(() => {
+    if (loggedIn) loadSchedule();
+  }, [loggedIn, loadSchedule]);
+
+  // Toggle task completion - saves to DB
+  const toggleTask = async (dayIndex: number, taskIndex: number) => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const taskKey = `${dayIndex}-${taskIndex}`;
+    setSavingTask(taskKey);
+
+    const currentCompleted = days[dayIndex]?.tasks[taskIndex]?.completed || false;
+    const newCompleted = !currentCompleted;
+
+    // Optimistic update
+    const updated = [...days];
+    updated[dayIndex] = {
+      ...updated[dayIndex],
+      tasks: updated[dayIndex].tasks.map((t, i) =>
+        i === taskIndex ? { ...t, completed: newCompleted } : t
+      ),
+    };
+    setDays(updated);
+
+    try {
+      const res = await fetch(`${API_URL}/api/ai/schedule/toggle`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ dayIndex, taskIndex, completed: newCompleted }),
+      });
+
+      const data = await res.json();
+      if (data.streak !== undefined) setStreak(data.streak);
+    } catch {
+      // Revert on error
+      const reverted = [...days];
+      reverted[dayIndex].tasks[taskIndex].completed = currentCompleted;
+      setDays(reverted);
+    } finally {
+      setSavingTask(null);
+    }
+  };
+
+  // Calculations
   const totalTasks = days.reduce((acc, d) => acc + d.tasks.length, 0);
   const completedTasks = days.reduce(
     (acc, d) => acc + d.tasks.filter((t) => t.completed).length,
     0
   );
-  const overallProgress =
-    totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
+  const overallProgress = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
 
-  const subjectProgress = subjects.map((sub) => {
-    const done = days.reduce(
-      (acc, d) => acc + (d.tasks.find((t) => t.subject === sub)?.completed ? 1 : 0),
+  // Subject-wise progress
+  const subjectProgress = subjectsList.map((sub) => {
+    const total = days.reduce(
+      (acc, d) => acc + d.tasks.filter((t) => t.subject === sub).length,
       0
     );
-    return { subject: sub, progress: Math.round((done / days.length) * 100) };
+    const done = days.reduce(
+      (acc, d) => acc + d.tasks.filter((t) => t.subject === sub && t.completed).length,
+      0
+    );
+    return {
+      subject: sub,
+      total,
+      done,
+      progress: total === 0 ? 0 : Math.round((done / total) * 100),
+    };
   });
 
+  // Days until exam
+  const daysUntilExam = examDate
+    ? Math.max(Math.ceil((new Date(examDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)), 0)
+    : null;
+
+  // Today's tasks
+  const todayStr = new Date().toISOString().split("T")[0];
+  const todayPlanIndex = days.findIndex((d) => d.date === todayStr);
+  const todayPlan = todayPlanIndex >= 0 ? days[todayPlanIndex] : null;
+
+  // Get progress bar color
+  const getProgressColor = (pct: number) => {
+    if (pct >= 80) return "from-green-400 to-emerald-500";
+    if (pct >= 50) return "from-cyan-400 to-blue-500";
+    if (pct >= 25) return "from-amber-400 to-orange-500";
+    return "from-red-400 to-pink-500";
+  };
+
+  const hasData = days.length > 0;
+
   return (
-    <div className="min-h-screen bg-[#0b0f19] text-gray-200 py-12 px-6">
-      <div className="max-w-4xl mx-auto">
-        <h2 className="text-4xl font-bold mb-6 text-center">
-          Study Progress <span className="text-cyan-400">Dashboard</span>
-        </h2>
-
-        <div className="bg-[#020617] border border-cyan-500/20 p-6 rounded-xl mb-6 flex justify-between">
-          <div>
-            <h3 className="text-xl font-bold text-cyan-400">🔥 Current Streak</h3>
-            <p className="text-gray-400 text-sm">Consistency matters</p>
+    <section id="progress" className="bg-[#0b0f19] text-gray-200 py-24 px-6">
+      <div className="max-w-5xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-400/10 border border-cyan-400/20 rounded-full text-cyan-400 text-sm mb-6">
+            <BarChart3 size={14} />
+            Real-time Progress Tracking
           </div>
-          <div className="text-3xl font-bold flex items-center gap-2">
-            <Flame className="text-orange-500" /> {streak}
-          </div>
-        </div>
-
-        <div className="bg-[#020617] border border-cyan-500/20 p-6 rounded-xl mb-10">
-          <h3 className="text-xl font-bold mb-4 text-cyan-400">Overall Progress</h3>
-          <div className="w-full bg-gray-800 h-4 rounded-full">
-            <div
-              className="h-full bg-cyan-500 transition-all"
-              style={{ width: `${overallProgress}%` }}
-            />
-          </div>
-          <p className="text-sm mt-2 text-gray-400">
-            {completedTasks} / {totalTasks} tasks completed ({overallProgress}%)
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            Study Progress <span className="text-cyan-400">Dashboard</span>
+          </h2>
+          <p className="text-gray-400 max-w-lg mx-auto">
+            Track your daily study tasks, maintain streaks, and monitor subject-wise progress.
           </p>
         </div>
 
-        <Section title="Daily Study Tasks">
-          {days.length === 0 ? (
-            <p className="text-gray-500 text-center">No schedule yet. Click Generate AI Schedule.</p>
-          ) : (
-            <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
-              {days.map((day, dayIndex) => (
-                <div key={day.date} className="bg-[#111827] p-4 rounded-xl">
-                  <div className="text-sm mb-2">{day.date}</div>
-                  {day.tasks.map((task, i) => (
-                    <div key={i} className="flex justify-between mb-1">
-                      <span>
-                        {task.subject} — {task.hours}h
-                      </span>
-                      <button
-                        onClick={() => toggleTask(dayIndex, i)}
-                        className={`px-3 py-1 rounded ${
-                          task.completed ? "bg-cyan-500 text-black" : "bg-[#020617]"
-                        }`}
-                      >
-                        {task.completed ? "Done" : "Mark"}
-                      </button>
+        {!loggedIn && (
+          <div className="text-center py-16 bg-[#020617] border border-cyan-500/20 rounded-2xl">
+            <Target className="mx-auto text-gray-600 mb-4" size={48} />
+            <p className="text-gray-400 text-lg">Please login to view your study progress</p>
+          </div>
+        )}
+
+        {loggedIn && loading && (
+          <div className="text-center py-16">
+            <div className="h-8 w-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+            <p className="text-gray-400">Loading your progress...</p>
+          </div>
+        )}
+
+        {loggedIn && !loading && !hasData && (
+          <div className="text-center py-16 bg-[#020617] border border-cyan-500/20 rounded-2xl">
+            <Calendar className="mx-auto text-gray-600 mb-4" size={48} />
+            <p className="text-gray-400 text-lg mb-2">No schedule generated yet</p>
+            <p className="text-gray-500 text-sm">
+              Use the <span className="text-cyan-400">AI Smart Scheduler</span> above to generate your personalized study plan
+            </p>
+          </div>
+        )}
+
+        {loggedIn && !loading && hasData && (
+          <>
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+              {/* Streak */}
+              <div className="bg-gradient-to-br from-orange-500/10 to-red-500/10 border border-orange-500/20 p-5 rounded-xl">
+                <div className="flex items-center gap-2 mb-2">
+                  <Flame className="text-orange-400" size={20} />
+                  <span className="text-xs text-gray-400 uppercase tracking-wider">Streak</span>
+                </div>
+                <p className="text-3xl font-bold text-orange-400">{streak}</p>
+                <p className="text-xs text-gray-500 mt-1">consecutive days</p>
+              </div>
+
+              {/* Overall Progress */}
+              <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 p-5 rounded-xl">
+                <div className="flex items-center gap-2 mb-2">
+                  <TrendingUp className="text-cyan-400" size={20} />
+                  <span className="text-xs text-gray-400 uppercase tracking-wider">Progress</span>
+                </div>
+                <p className="text-3xl font-bold text-cyan-400">{overallProgress}%</p>
+                <p className="text-xs text-gray-500 mt-1">{completedTasks}/{totalTasks} tasks</p>
+              </div>
+
+              {/* Days Left */}
+              {daysUntilExam !== null && (
+                <div className="bg-gradient-to-br from-violet-500/10 to-purple-500/10 border border-violet-500/20 p-5 rounded-xl">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Clock className="text-violet-400" size={20} />
+                    <span className="text-xs text-gray-400 uppercase tracking-wider">Exam In</span>
+                  </div>
+                  <p className="text-3xl font-bold text-violet-400">{daysUntilExam}</p>
+                  <p className="text-xs text-gray-500 mt-1">days remaining</p>
+                </div>
+              )}
+
+              {/* Total Days */}
+              <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/20 p-5 rounded-xl">
+                <div className="flex items-center gap-2 mb-2">
+                  <Trophy className="text-green-400" size={20} />
+                  <span className="text-xs text-gray-400 uppercase tracking-wider">Plan</span>
+                </div>
+                <p className="text-3xl font-bold text-green-400">{days.length}</p>
+                <p className="text-xs text-gray-500 mt-1">days scheduled</p>
+              </div>
+            </div>
+
+            {/* Overall Progress Bar */}
+            <div className="bg-[#020617] border border-cyan-500/20 p-6 rounded-xl mb-8">
+              <div className="flex justify-between items-center mb-3">
+                <h3 className="text-lg font-bold text-gray-200">Overall Progress</h3>
+                <span className="text-sm font-mono text-cyan-400">{overallProgress}%</span>
+              </div>
+              <div className="w-full bg-gray-800 h-3 rounded-full overflow-hidden">
+                <div
+                  className={`h-full bg-gradient-to-r ${getProgressColor(overallProgress)} rounded-full transition-all duration-700 ease-out`}
+                  style={{ width: `${overallProgress}%` }}
+                />
+              </div>
+              <p className="text-xs mt-2 text-gray-500">
+                {completedTasks} of {totalTasks} tasks completed
+              </p>
+            </div>
+
+            {/* Today's Tasks */}
+            {todayPlan && (
+              <div className="bg-gradient-to-r from-cyan-500/5 to-blue-500/5 border-2 border-cyan-500/30 p-6 rounded-xl mb-8 shadow-lg shadow-cyan-500/5">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-bold text-cyan-400 flex items-center gap-2">
+                    🎯 Today's Study Plan
+                  </h3>
+                  <span className="text-xs bg-cyan-400/20 text-cyan-400 px-3 py-1 rounded-full">
+                    {todayPlan.tasks.filter((t) => t.completed).length}/{todayPlan.tasks.length} done
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  {todayPlan.tasks.map((task, i) => (
+                    <div
+                      key={i}
+                      className={`flex items-center justify-between p-3 rounded-lg transition-all ${
+                        task.completed
+                          ? "bg-green-500/10 border border-green-500/20"
+                          : "bg-[#111827] border border-gray-800 hover:border-gray-700"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <button
+                          onClick={() => toggleTask(todayPlanIndex, i)}
+                          disabled={savingTask === `${todayPlanIndex}-${i}`}
+                          className="transition-all hover:scale-110"
+                        >
+                          {savingTask === `${todayPlanIndex}-${i}` ? (
+                            <div className="h-5 w-5 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+                          ) : task.completed ? (
+                            <CheckCircle2 className="text-green-400" size={20} />
+                          ) : (
+                            <Circle className="text-gray-600 hover:text-cyan-400" size={20} />
+                          )}
+                        </button>
+                        <div>
+                          <span className={`font-medium text-sm ${task.completed ? "text-gray-500 line-through" : "text-gray-200"}`}>
+                            {task.subject}
+                          </span>
+                          <span className="text-xs text-gray-500 ml-2">{task.type}</span>
+                        </div>
+                      </div>
+                      <span className="text-xs text-gray-500 font-mono">{task.hours}h</span>
                     </div>
                   ))}
                 </div>
-              ))}
-            </div>
-          )}
-        </Section>
-
-        <Section title="Subject-wise Progress">
-          {subjects.length === 0 ? (
-            <p className="text-gray-500 text-center">No subjects yet. Click Generate AI Schedule.</p>
-          ) : (
-            subjectProgress.map((s) => (
-              <div key={s.subject} className="mb-4">
-                <div className="flex justify-between text-sm mb-1">
-                  <span>{s.subject}</span>
-                  <span>{s.progress}%</span>
-                </div>
-                <div className="w-full bg-gray-800 h-3 rounded-full">
-                  <div
-                    className="h-full bg-cyan-500"
-                    style={{ width: `${s.progress}%` }}
-                  />
-                </div>
               </div>
-            ))
-          )}
-        </Section>
-      </div>
-    </div>
-  );
-}
+            )}
 
-function Section({ title, children }: any) {
-  return (
-    <div className="bg-[#020617] border border-cyan-500/20 p-6 rounded-xl mb-10">
-      <h3 className="text-xl font-bold mb-4 text-cyan-400 flex gap-2">
-        <BarChart3 size={18} /> {title}
-      </h3>
-      {children}
-    </div>
+            {/* Subject-wise Progress */}
+            <div className="bg-[#020617] border border-cyan-500/20 p-6 rounded-xl mb-8">
+              <h3 className="text-lg font-bold mb-5 text-gray-200 flex items-center gap-2">
+                <BarChart3 size={18} className="text-cyan-400" /> Subject Progress
+              </h3>
+              {subjectProgress.length === 0 ? (
+                <p className="text-gray-500 text-center text-sm">No subjects tracked yet</p>
+              ) : (
+                <div className="space-y-4">
+                  {subjectProgress.map((s) => (
+                    <div key={s.subject}>
+                      <div className="flex justify-between text-sm mb-1.5">
+                        <span className="text-gray-300 font-medium">{s.subject}</span>
+                        <span className="text-gray-500 font-mono">
+                          {s.done}/{s.total} · {s.progress}%
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-800 h-2.5 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full bg-gradient-to-r ${getProgressColor(s.progress)} rounded-full transition-all duration-500`}
+                          style={{ width: `${s.progress}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* All Days */}
+            <div className="bg-[#020617] border border-cyan-500/20 p-6 rounded-xl">
+              <h3 className="text-lg font-bold mb-5 text-gray-200 flex items-center gap-2">
+                <Calendar size={18} className="text-cyan-400" /> Full Schedule
+              </h3>
+              <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                {days.map((day, dayIndex) => {
+                  const dayCompleted = day.tasks.filter((t) => t.completed).length;
+                  const dayTotal = day.tasks.length;
+                  const dayPct = dayTotal === 0 ? 0 : Math.round((dayCompleted / dayTotal) * 100);
+                  const isDayToday = day.date === todayStr;
+                  const isPast = day.date < todayStr;
+
+                  return (
+                    <div
+                      key={day.date}
+                      className={`p-4 rounded-xl transition-all ${
+                        isDayToday
+                          ? "bg-cyan-500/10 border-2 border-cyan-500/30"
+                          : dayPct === 100
+                          ? "bg-green-500/5 border border-green-500/20"
+                          : "bg-[#111827] border border-gray-800"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-mono text-gray-500">Day {dayIndex + 1}</span>
+                          <span className={`text-sm font-semibold ${isDayToday ? "text-cyan-400" : "text-gray-300"}`}>
+                            {new Date(day.date).toLocaleDateString("en-US", {
+                              weekday: "short",
+                              month: "short",
+                              day: "numeric",
+                            })}
+                          </span>
+                          {isDayToday && (
+                            <span className="text-[10px] bg-cyan-400/20 text-cyan-400 px-2 py-0.5 rounded-full">
+                              TODAY
+                            </span>
+                          )}
+                          {dayPct === 100 && (
+                            <span className="text-[10px] bg-green-400/20 text-green-400 px-2 py-0.5 rounded-full">
+                              ✓ DONE
+                            </span>
+                          )}
+                        </div>
+                        <span className="text-xs text-gray-500">{dayCompleted}/{dayTotal}</span>
+                      </div>
+
+                      <div className="space-y-1.5">
+                        {day.tasks.map((task, i) => (
+                          <div
+                            key={i}
+                            className="flex items-center justify-between group"
+                          >
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => toggleTask(dayIndex, i)}
+                                disabled={savingTask === `${dayIndex}-${i}` || (!isDayToday && !isPast)}
+                                className={`transition-all ${!isDayToday && !isPast ? "opacity-30 cursor-not-allowed" : "hover:scale-110 cursor-pointer"}`}
+                              >
+                                {savingTask === `${dayIndex}-${i}` ? (
+                                  <div className="h-4 w-4 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+                                ) : task.completed ? (
+                                  <CheckCircle2 className="text-green-400" size={16} />
+                                ) : (
+                                  <Circle className="text-gray-600 group-hover:text-cyan-400" size={16} />
+                                )}
+                              </button>
+                              <span
+                                className={`text-sm ${
+                                  task.completed
+                                    ? "text-gray-500 line-through"
+                                    : "text-gray-300"
+                                }`}
+                              >
+                                {task.subject}
+                              </span>
+                            </div>
+                            <span className="text-xs text-gray-600">{task.hours}h</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </section>
   );
 }
